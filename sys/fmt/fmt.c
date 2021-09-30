@@ -28,7 +28,7 @@
 #include <stdio.h>  /* for fwrite() */
 #else
 /* work around broken sys/posix/unistd.h */
-ssize_t write(int fildes, const void *buf, size_t nbyte);
+//ssize_t write(int fildes, const void *buf, size_t nbyte);
 #endif
 
 #include "fmt.h"

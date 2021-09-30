@@ -71,6 +71,21 @@ init_ports(void)
 #ifdef P6SEL
     P6SEL = 0;
 #endif
+#ifdef P7SEL
+    P7SEL = 0;
+#endif
+#ifdef P8SEL
+    P8SEL = 0;
+#endif
+#ifdef P9SEL
+    P9SEL = 0;
+#endif
+#ifdef P10SEL
+    P10SEL = 0;
+#endif
+#ifdef P11SEL
+    P11SEL = 0;
+#endif
 
     /* All available inputs */
 #ifdef P1DIR
@@ -98,6 +113,31 @@ init_ports(void)
 #ifdef P6DIR
     P6DIR = 0;
     P6OUT = 0;
+#endif
+
+#ifdef P7DIR
+    P7DIR = 0;
+    P7OUT = 0;
+#endif
+
+#ifdef P8DIR
+    P8DIR = 0;
+    P8OUT = 0;
+#endif
+
+#ifdef P9DIR
+    P9DIR = 0;
+    P9OUT = 0;
+#endif
+
+#ifdef P10DIR
+    P10DIR = 0;
+    P10OUT = 0;
+#endif
+
+#ifdef P11DIR
+    P11DIR = 0;
+    P11OUT = 0;
 #endif
 
     P1IE = 0;

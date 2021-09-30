@@ -28,6 +28,8 @@
 #include "cc2420_netdev.h"
 #include "cc2420_registers.h"
 
+#include "msp430f5438a.h"
+
 #define ENABLE_DEBUG 0
 #include "debug.h"
 
@@ -49,6 +51,7 @@ void cc2420_setup(cc2420_t * dev, const cc2420_params_t *params, uint8_t index)
 
 int cc2420_init(cc2420_t *dev)
 {
+    P4OUT ^= 0xe0;
     uint16_t reg;
 
     netdev_ieee802154_reset(&dev->netdev);

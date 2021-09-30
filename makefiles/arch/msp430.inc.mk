@@ -10,6 +10,8 @@ CFLAGS_LINK  = -ffunction-sections -fdata-sections
 CFLAGS_DBG  ?= -g -gdwarf-2
 CFLAGS_OPT  ?= -Os
 
+CFLAGS_CPU += -mlarge -mdata-region=lower -mcode-region=upper
+
 CFLAGS += $(CFLAGS_CPU) $(CFLAGS_LINK) $(CFLAGS_DBG) $(CFLAGS_OPT)
 ASFLAGS += $(CFLAGS_CPU) --defsym $(CPU_MODEL)=1 $(CFLAGS_DBG)
 

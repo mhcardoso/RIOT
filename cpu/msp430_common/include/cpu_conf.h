@@ -45,6 +45,9 @@ extern "C" {
 #elif defined (CPU_MODEL_CC430F6137)
 #define CPU_FLASH_BASE      (0x8000)
 #define FLASHPAGE_NUMOF     (64U)        /* 32K */
+#elif defined (CPU_MODEL_MSP430F5438A)
+#define CPU_FLASH_BASE      (0xFFFF)
+#define FLASHPAGE_NUMOF     (430U)
 #endif
 
 /* The minimum block size which can be written is 1B. However, the erase

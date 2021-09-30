@@ -176,7 +176,7 @@ static inline size_t flashpage_size(unsigned page)
  */
 static inline void *flashpage_addr(unsigned page)
 {
-    return (void *)(CPU_FLASH_BASE + (page * FLASHPAGE_SIZE));
+    return (void *)(uintptr_t)(CPU_FLASH_BASE + (page * FLASHPAGE_SIZE));
 }
 
 /**
