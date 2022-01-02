@@ -71,11 +71,11 @@ extern "C" {
 #endif
 
 #ifndef THREAD_STACKSIZE_DEFAULT
-#   define THREAD_STACKSIZE_DEFAULT         (384)
+#   define THREAD_STACKSIZE_DEFAULT         (700)
 #endif
 
 #ifndef THREAD_STACKSIZE_IDLE
-#   define THREAD_STACKSIZE_IDLE            (96)
+#   define THREAD_STACKSIZE_IDLE            (256)
 #endif
 
 #ifndef ISR_STACKSIZE

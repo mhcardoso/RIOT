@@ -114,7 +114,7 @@ extern "C" {
  * @name    Definition of the interface to the CC2420 radio
  * @{
  */
-#define CC2420_PARAM_CS            GPIO_PIN(P10, 0)
+#define CC2420_PARAM_CS            GPIO_PIN(P10, 0) //was 0.
 #define CC2420_PARAM_FIFO          GPIO_PIN(P1, 2)
 #define CC2420_PARAM_FIFOP         GPIO_PIN(P1, 6)
 #define CC2420_PARAM_CCA           GPIO_PIN(P1, 7)

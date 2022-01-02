@@ -225,6 +225,7 @@ kernel_pid_t thread_create(char *stack, int stacksize, uint8_t priority,
      * (uintptr_t) intermediately to silence -Wcast-align. (We manually made
      * sure alignment is correct above.) */
     thread_t *thread = (thread_t *)(uintptr_t)(stack + stacksize);
+    //printf("hah ahah %x\n", (unsigned short)(uintptr_t)&thread);
 
 #ifdef PICOLIBC_TLS
     stacksize -= _tls_size();
@@ -260,6 +261,7 @@ kernel_pid_t thread_create(char *stack, int stacksize, uint8_t priority,
             pid = i;
             break;
         }
+        printf("hah ahah %x\n", (unsigned short)(uintptr_t)(&sched_threads[i]));
     }
     if (pid == KERNEL_PID_UNDEF) {
         DEBUG("thread_create(): too many threads!\n");
@@ -270,10 +272,10 @@ kernel_pid_t thread_create(char *stack, int stacksize, uint8_t priority,
     }
 
     sched_threads[pid] = thread;
-
+    
     thread->pid = pid;
     thread->sp = thread_stack_init(function, arg, stack, stacksize);
-
+    
 #if defined(DEVELHELP) || defined(SCHED_TEST_STACK) || \
     defined(MODULE_MPU_STACK_GUARD)
     thread->stack_start = stack;
@@ -284,6 +286,7 @@ kernel_pid_t thread_create(char *stack, int stacksize, uint8_t priority,
 #endif
 #ifdef CONFIG_THREAD_NAMES
     thread->name = name;
+    printf("stack initial %x e nome %s no endereço %x\n", (unsigned short)(uintptr_t)(thread->sp), thread->name, (unsigned short)(uintptr_t)(&thread->name));
 #endif
 
     thread->priority = priority;

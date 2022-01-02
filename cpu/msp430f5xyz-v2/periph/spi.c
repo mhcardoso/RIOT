@@ -84,8 +84,10 @@ int spi_acquire(spi_t bus, spi_cs_t cs, spi_mode_t mode, spi_clk_t clk)
     if (br < 2) {
         br = 2;
     }
-    SPI_BASE->BR0 = (uint8_t)br;
-    SPI_BASE->BR1 = (uint8_t)(br >> 8);
+    /*SPI_BASE->BR0 = (uint8_t)br;
+    SPI_BASE->BR1 = (uint8_t)(br >> 8);*/
+    SPI_BASE->BR0 = 0x01;
+    SPI_BASE->BR1 = 0x00;
 
     /* configure bus mode */
 #ifndef SPI_USE_USCI
@@ -129,11 +131,14 @@ void spi_transfer_bytes(spi_t bus, spi_cs_t cs, bool cont,
     assert(out_buf || in_buf);
 
     if (cs != SPI_CS_UNDEF) {
+        printf("cs?: %x\n", cs);
         gpio_clear((gpio_t)cs);
+        printf("cs?: %x\n", cs);
     }
 
     /* if we only send out data, we do this the fast way... */
     if (!in_buf) {
+        printf("boo\n");
         for (size_t i = 0; i < len; i++) {
             while (!(SPI_IF & SPI_IE_TX_BIT)) {}
             SPI_BASE->TXBUF = out_buf[i];

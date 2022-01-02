@@ -55,7 +55,6 @@ void thread_yield_higher(void)
 
         /* have thread_get_active() point to the next thread */
         sched_run();
-
         __restore_context();
 
         UNREACHABLE();
@@ -135,7 +134,7 @@ char *thread_stack_init(thread_task_func_t task_func, void *arg, void *stack_sta
     --stackptr;
 
     /* Space for registers. */
-    for (unsigned int i = 27/*15*/; i > 4; i--) {
+    for (unsigned int i = 27/*15*/; i > 4; i--) { //problema aqui? 
         *stackptr = i;
         --stackptr;
     }
@@ -144,8 +143,8 @@ char *thread_stack_init(thread_task_func_t task_func, void *arg, void *stack_sta
        this was R15 in mspgcc, see https://www.ti.com/lit/an/slaa664/slaa664.pdf
        stackptr points to R3, so write arg 9 words after that.
     */
-    printf("this is arg %x\n", (unsigned short)(uintptr_t)arg);
-    printf("this is top arg %x\n", ( 0xF000 & ( unsigned short ) ( ( ( __int20 ) task_func ) >> 4 ) ));
+    //printf("this is arg %x\n", (unsigned short)(uintptr_t)arg);
+    //printf("this is top arg %x\n", ( 0xF000 & ( unsigned short ) ( ( ( __int20 ) arg ) >> 4 ) ));
     stackptr[16] = (intptr_t)arg;
     stackptr[17] = (intptr_t)0;
 

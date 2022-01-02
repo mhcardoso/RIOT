@@ -41,7 +41,7 @@ extern "C" {
  * @brief   Seed selected when all tries to collect seeds from a random source
  *          failed
  */
-#define RANDOM_SEED_DEFAULT (1)
+#define RANDOM_SEED_DEFAULT (125323)
 #endif
 
 /**

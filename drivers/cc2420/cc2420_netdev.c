@@ -98,6 +98,7 @@ static int _init(netdev_t *netdev)
 {
     netdev_ieee802154_t *netdev_ieee802154 = container_of(netdev, netdev_ieee802154_t, netdev);
     cc2420_t *dev = container_of(netdev_ieee802154, cc2420_t, netdev);
+    int a = 0;
 
     uint16_t reg;
 
@@ -114,7 +115,8 @@ static int _init(netdev_t *netdev)
     gpio_init_int(dev->params.pin_fifop, GPIO_IN, GPIO_RISING, _irq_handler, dev);
 
     /* initialize the chip select line and the SPI bus */
-    spi_init_cs(dev->params.spi, dev->params.pin_cs);
+    a = spi_init_cs(dev->params.spi, dev->params.pin_cs);
+    printf("olha aqui o spi init cs %d\n", a);
 
     /* power on and toggle reset */
     gpio_set(dev->params.pin_vrefen);

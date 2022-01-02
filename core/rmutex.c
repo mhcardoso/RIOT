@@ -91,6 +91,7 @@ static int _lock(rmutex_t *rmutex, int trylock)
                 return 0;
             }
             else {
+                DEBUG("stuck here!\n");
                 mutex_lock(&rmutex->mutex);
             }
         }

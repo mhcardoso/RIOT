@@ -128,8 +128,8 @@ static void moteist5v2_ports_init(void)
     P9DIR = 0xCC;
 
     P10SEL = 0x0E; /* 00001110*/
-    P10OUT = 0x01;
-    P10DIR = 0x0D;
+    P10OUT = 0x01; /* 00000001*/
+    P10DIR = 0x0D; /* 00001101*/
 
     P11SEL = 0x00;
     P11OUT = 0x00;

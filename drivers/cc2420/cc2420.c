@@ -30,7 +30,7 @@
 
 #include "msp430f5438a.h"
 
-#define ENABLE_DEBUG 0
+#define ENABLE_DEBUG 1
 #include "debug.h"
 
 void cc2420_setup(cc2420_t * dev, const cc2420_params_t *params, uint8_t index)

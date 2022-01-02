@@ -79,9 +79,9 @@ extern "C" {
 #define SPI_IF              (USCI_3_B_SPI->IFG)
 #define SPI_IE_RX_BIT       (1 << 0)
 #define SPI_IE_TX_BIT       (1 << 1)
-#define SPI_PIN_MISO        GPIO_PIN(P10, 2)
-#define SPI_PIN_MOSI        GPIO_PIN(P10, 1)
-#define SPI_PIN_CLK         GPIO_PIN(P10, 3)
+#define SPI_PIN_MISO        GPIO_PIN(P10, 1) 
+#define SPI_PIN_MOSI        GPIO_PIN(P10, 2) 
+#define SPI_PIN_CLK         GPIO_PIN(P10, 3) //was 3
 /** @} */
 
 #ifdef __cplusplus

@@ -1730,6 +1730,7 @@ static void *_gnrc_netif_thread(void *args)
     gnrc_netif_acquire(netif);
     dev = netif->dev;
     netif->pid = thread_getpid();
+    
 
 #if IS_USED(MODULE_GNRC_NETIF_EVENTS)
     netif->event_isr.handler = _event_handler_isr,

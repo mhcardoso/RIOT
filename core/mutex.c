@@ -62,8 +62,10 @@ static inline __attribute__((always_inline)) void _block(mutex_t *mutex,
     else {
         thread_add_to_list(&mutex->queue, me);
     }
-
+    
+    
     irq_restore(irq_state);
+    DEBUG("Did I get here?\n");
     thread_yield_higher();
     /* We were woken up by scheduler. Waker removed us from queue. */
 }
@@ -71,7 +73,7 @@ static inline __attribute__((always_inline)) void _block(mutex_t *mutex,
 void mutex_lock(mutex_t *mutex)
 {
     unsigned irq_state = irq_disable();
-
+    
     DEBUG("PID[%" PRIkernel_pid "] mutex_lock().\n", thread_getpid());
 
     if (mutex->queue.next == NULL) {
