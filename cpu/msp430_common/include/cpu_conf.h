@@ -75,7 +75,7 @@ extern "C" {
 #endif
 
 #ifndef THREAD_STACKSIZE_IDLE
-#   define THREAD_STACKSIZE_IDLE            (256)
+#   define THREAD_STACKSIZE_IDLE            (128)
 #endif
 
 #ifndef ISR_STACKSIZE
