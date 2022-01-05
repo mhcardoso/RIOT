@@ -49,7 +49,7 @@
 #include "net/gnrc/netif/internal.h"
 #include "net/gnrc/tx_sync.h"
 
-#define ENABLE_DEBUG 1
+#define ENABLE_DEBUG 0
 #include "debug.h"
 
 static void _update_l2addr_from_dev(gnrc_netif_t *netif);

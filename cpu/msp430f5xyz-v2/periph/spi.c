@@ -129,16 +129,16 @@ void spi_transfer_bytes(spi_t bus, spi_cs_t cs, bool cont,
     uint8_t *in_buf = in;
 
     assert(out_buf || in_buf);
-
+    
     if (cs != SPI_CS_UNDEF) {
-        printf("cs?: %x\n", cs);
+        //printf("on aquire cs output is: %d\n", gpio_read((gpio_t)cs));
         gpio_clear((gpio_t)cs);
-        printf("cs?: %x\n", cs);
+        //printf("on aquire cs output is: %d\n", gpio_read((gpio_t)cs));
     }
-
+    
     /* if we only send out data, we do this the fast way... */
     if (!in_buf) {
-        printf("boo\n");
+        //printf("boo\n");
         for (size_t i = 0; i < len; i++) {
             while (!(SPI_IF & SPI_IE_TX_BIT)) {}
             SPI_BASE->TXBUF = out_buf[i];
@@ -166,8 +166,10 @@ void spi_transfer_bytes(spi_t bus, spi_cs_t cs, bool cont,
             in_buf[i] = (char)SPI_BASE->RXBUF;
         }
     }
-
+   
     if ((!cont) && (cs != SPI_CS_UNDEF)) {
+        //printf("on drop cs output is: %d\n", gpio_read((gpio_t)cs));
         gpio_set((gpio_t)cs);
+        //printf("on drop cs output is: %d\n", gpio_read((gpio_t)cs));
     }
 }
