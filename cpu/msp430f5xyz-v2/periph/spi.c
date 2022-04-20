@@ -86,7 +86,7 @@ int spi_acquire(spi_t bus, spi_cs_t cs, spi_mode_t mode, spi_clk_t clk)
     }
     /*SPI_BASE->BR0 = (uint8_t)br;
     SPI_BASE->BR1 = (uint8_t)(br >> 8);*/
-    SPI_BASE->BR0 = 0x01;
+    SPI_BASE->BR0 = 0x02;
     SPI_BASE->BR1 = 0x00;
 
     /* configure bus mode */
@@ -127,21 +127,19 @@ void spi_transfer_bytes(spi_t bus, spi_cs_t cs, bool cont,
 
     const uint8_t *out_buf = out;
     uint8_t *in_buf = in;
-
+    
     assert(out_buf || in_buf);
     
     if (cs != SPI_CS_UNDEF) {
-        //printf("on aquire cs output is: %d\n", gpio_read((gpio_t)cs));
         gpio_clear((gpio_t)cs);
-        //printf("on aquire cs output is: %d\n", gpio_read((gpio_t)cs));
     }
     
     /* if we only send out data, we do this the fast way... */
     if (!in_buf) {
-        //printf("boo\n");
+        
         for (size_t i = 0; i < len; i++) {
             while (!(SPI_IF & SPI_IE_TX_BIT)) {}
-            SPI_BASE->TXBUF = out_buf[i];
+	    SPI_BASE->TXBUF = out_buf[i];
         }
         /* finally we need to wait, until all transfers are complete */
 #ifndef SPI_USE_USCI
@@ -168,8 +166,6 @@ void spi_transfer_bytes(spi_t bus, spi_cs_t cs, bool cont,
     }
    
     if ((!cont) && (cs != SPI_CS_UNDEF)) {
-        //printf("on drop cs output is: %d\n", gpio_read((gpio_t)cs));
         gpio_set((gpio_t)cs);
-        //printf("on drop cs output is: %d\n", gpio_read((gpio_t)cs));
     }
 }

@@ -70,6 +70,7 @@ static inline msp_port_isr_t *_isr_port(gpio_t pin)
 {
     msp_port_t *p = _port(pin);
     if ((p == PORT_1) || (p == PORT_2)) {
+        printf("ici ici je viens ici asasd\n");
         return (msp_port_isr_t *)p;
     }
     return NULL;
@@ -171,7 +172,7 @@ int gpio_init_int(gpio_t pin, gpio_mode_t mode, gpio_flank_t flank,
                     gpio_cb_t cb, void *arg)
 {
     msp_port_isr_t *port = _isr_port(pin);
-
+    
     /* check if port, pull resistor and flank configuration are valid */
     if ((port == NULL) || (flank == GPIO_BOTH)) {
         return -1;
@@ -189,9 +190,11 @@ int gpio_init_int(gpio_t pin, gpio_mode_t mode, gpio_flank_t flank,
     /* configure flank */
     port->IES &= ~(_pin(pin));
     port->IES |= (flank & _pin(pin));
+    printf("IES?! %x\n Pin? %x\n", port->IES, _pin(pin));
     /* clear pending interrupts and enable the IRQ */
     port->IFG &= ~(_pin(pin));
     gpio_irq_enable(pin);
+    printf("asdasd ies addd? %x\n", (unsigned int)(uintptr_t)&(port->IES));
     return 0;
 }
 
@@ -200,6 +203,7 @@ void gpio_irq_enable(gpio_t pin)
     msp_port_isr_t *port = _isr_port(pin);
     if (port) {
         port->IE |= _pin(pin);
+        printf("IE=???? %x\n", port->IE);
     }
 }
 
@@ -213,6 +217,7 @@ void gpio_irq_disable(gpio_t pin)
 
 static inline void isr_handler(msp_port_isr_t *port, int ctx)
 {
+    P4OUT ^= 0xe0;
     for (unsigned i = 0; i < PINS_PER_PORT; i++) {
         if ((port->IE & (1 << i)) && (port->IFG & (1 << i))) {
             port->IFG &= ~(1 << i);

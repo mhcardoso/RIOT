@@ -35,6 +35,8 @@
 #include "net/sixlowpan.h"
 #include "od.h"
 
+#include "led.h"
+
 /**
  * @brief   PID of the pktdump thread
  */
@@ -164,6 +166,7 @@ static void _dump(gnrc_pktsnip_t *pkt)
 
 static void *_eventloop(void *arg)
 {
+    puts("aqui\n");
     (void)arg;
     msg_t msg, reply;
     msg_t msg_queue[GNRC_PKTDUMP_MSG_QUEUE_SIZE];
@@ -173,10 +176,11 @@ static void *_eventloop(void *arg)
 
     reply.content.value = (uint32_t)(-ENOTSUP);
     reply.type = GNRC_NETAPI_MSG_TYPE_ACK;
-
+    
     while (1) {
+        printf("chatice.\n");
         msg_receive(&msg);
-
+        printf("dupla chatice\n");
         switch (msg.type) {
             case GNRC_NETAPI_MSG_TYPE_RCV:
                 puts("PKTDUMP: data received:");

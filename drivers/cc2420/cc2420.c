@@ -30,7 +30,7 @@
 
 #include "msp430f5438a.h"
 
-#define ENABLE_DEBUG 1
+#define ENABLE_DEBUG 0
 #include "debug.h"
 
 void cc2420_setup(cc2420_t * dev, const cc2420_params_t *params, uint8_t index)
@@ -64,7 +64,7 @@ int cc2420_init(cc2420_t *dev)
     /* set default options */
     cc2420_set_option(dev, CC2420_OPT_AUTOACK, true);
     cc2420_set_option(dev, CC2420_OPT_CSMA, true);
-
+    
     /* change default RX bandpass filter to 1.3uA (as recommended) */
     reg = cc2420_reg_read(dev, CC2420_REG_RXCTRL1);
     reg |= CC2420_RXCTRL1_RXBPF_LOCUR;
@@ -77,6 +77,9 @@ int cc2420_init(cc2420_t *dev)
     reg = cc2420_reg_read(dev, CC2420_REG_SECCTRL0);
     reg &= ~CC2420_SECCTRL0_RXFIFO_PROT;
     cc2420_reg_write(dev, CC2420_REG_SECCTRL0, reg);
+    
+    reg = cc2420_reg_read(dev, CC2420_REG_MDMCTRL1);
+    printf("?? %x %x\n", reg, ((20 & 0x1f) << 6));
 
     /* set preamble length to 3 leading zero byte */
     /* and turn on hardware CRC generation */
@@ -88,6 +91,8 @@ int cc2420_init(cc2420_t *dev)
 
     /* go into RX state */
     cc2420_set_state(dev, NETOPT_STATE_IDLE);
+    
+    //printf("State? %d\n", cc2420_state(dev));
 
     return 0;
 }
@@ -112,6 +117,8 @@ size_t cc2420_send(cc2420_t *dev, const iolist_t *iolist)
 size_t cc2420_tx_prepare(cc2420_t *dev, const iolist_t *iolist)
 {
     size_t pkt_len = 2;     /* include the FCS (frame check sequence) */
+
+    printf("%x\n", cc2420_status(dev));
 
     /* wait for any ongoing transmissions to be finished */
     DEBUG("cc2420: tx_exec: waiting for any ongoing transmission\n");
@@ -151,6 +158,8 @@ void cc2420_tx_exec(cc2420_t *dev)
     DEBUG("cc2420: tx_exec: TX_START\n");
     if (dev->options & CC2420_OPT_CSMA) {
         DEBUG("cc2420: tx_exec: triggering TX with CCA\n");
+        cc2420_strobe(dev, CC2420_STROBE_RXON);
+        while (!(cc2420_status(dev) & CC2420_STATUS_RSSI_VALID)) { printf("olaolaola\n"); }
         cc2420_strobe(dev, CC2420_STROBE_TXONCCA);
     }
     else {

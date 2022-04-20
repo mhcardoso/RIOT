@@ -147,6 +147,7 @@ init_ports(void)
 void msp430_cpu_init(void)
 {
     irq_disable();
+    WDTCTL     =  WDTPW + WDTHOLD;
     init_ports();
     irq_enable();
 }

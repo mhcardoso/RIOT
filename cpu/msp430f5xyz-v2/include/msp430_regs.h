@@ -59,43 +59,45 @@ typedef struct {
     REG8    reserved_b;
     REG8    DIR;        /**< pin direction */
     REG8    reserved_c;
-    REG8    SEL;        /**< alternative function select */
+    REG8    REN;        /**< alternative function select */
     REG8    reserved_d;
-    REG8    REN;        /** */
+    REG8    DS;        /** */
     REG8    reserved_e;
-    REG8    DS;         /** */
+    REG8    SEL;         /** */
 } msp_port_t;
 
 /**
  * @brief   Digital I/O Port with interrupt functionality (P1 & P2)
  */
 typedef struct {
-    REG8    IN;         /**< input data  0x00*/
-    REG8    reserved_a;
-    REG8    OD;         /**< output data */
-    REG8    reserved_b;
-    REG8    DIR;        /**< pin direction */
-    REG8    reserved_c;
-    REG8    REN;        /** */
-    REG8    reserved_d;
-    REG8    DS;         /** */
-    REG8    reserved_e;
-    REG8    SEL;        /**< alternative function select */
-    REG8    reserved_f;
-    REG8    reserved_g;
-    REG8    reserved_h;
+    REG8    IN;         /**< input data  0x00 */
+    REG8    reserved_a; /** 0x01 */
+    REG8    OD;         /**< output data 0x02 */
+    REG8    reserved_b; /** 0x03 */
+    REG8    DIR;        /**< pin direction 0x04 */
+    REG8    reserved_c; /** 0x05 */
+    REG8    REN;        /** 0x06 */
+    REG8    reserved_d; /** 0x07 */
+    REG8    DS;         /** 0x08 */
+    REG8    reserved_e; /** 0x09 */
+    REG8    SEL;        /**< alternative function select 0x0a */
+    REG8    reserved_f; /** 0x0b */
+    REG8    reserved_g; /** 0x0c */
+    REG8    reserved_h; /** 0x0d */
     REG16   IV; /** 0x0e */
-    REG8    reserved_i;
-    REG8    reserved_j;
-    REG8    reserved_l;
-    REG8    reserved_m;
-    REG8    reserved_n;
-    REG8    reserved_o;
-    REG8    reserved_p;
-    REG8    reserved_q;
-    REG8    IE;
-    REG8    IES;
-    REG8    IFG;
+    REG8    reserved_j; /** 0x10*/
+    REG8    reserved_l; /** 0x11*/
+    REG8    reserved_m; /** 0x12*/
+    REG8    reserved_n; /** 0x13*/
+    REG8    reserved_o; /** 0x14*/
+    REG8    reserved_p; /** 0x15*/
+    REG8    reserved_q; /** 0x16*/
+    REG8    reserved_r; /** 0x18*/
+    REG8    IES; /** 0x18*/
+    REG8    reserved_s; /** 0x19*/
+    REG8    IE; /** 0x1a*/
+    REG8    reserved_t; /** 0x1b*/
+    REG8    IFG; /** 0x1c */
 } msp_port_isr_t;
 /**
  * @brief   USART (UART, SPI and I2C) registers
@@ -155,32 +157,32 @@ typedef struct {
 typedef struct {
     REG8    CTL1;      /**< control 1 0x00*/
     REG8    CTL0;      /**< control 0 0x01*/
-    REG8    reserved_a;
-    REG8    reserved_b;
-    REG8    reserved_c;
-    REG8    reserved_d;
+    REG8    reserved_a; /* 02 */
+    REG8    reserved_b; /* 03 */
+    REG8    reserved_c; /* 04 */
+    REG8    reserved_d; /* 05 */
     REG8    BR0;       /**< bit rate 0 0x06 */
     REG8    BR1;       /**< bit rate 1 0x07*/
-    REG8    reserved_e;  /**< reserved */
-REG8 reserved_f;
+    REG8    reserved_e;  /**< reserved 0x08 */
+    REG8    reserved_f; /* 09*/
     REG8    STAT;      /**< status 0x0A*/
-REG8    reserved_g;
+    REG8    reserved_g; /* 0B*/
     REG8    RXBUF;     /**< receive buffer 0x0C*/
-REG8    reserved_h;
+    REG8    reserved_h; /* 0D*/
     REG8    TXBUF;     /**< transmit buffer 0x0E*/
-REG8    reserved_i /* 10*/;
-REG8    reserved_j /* 11*/;
-REG8    reserved_k /* 12*/;
-REG8    reserved_l /* 13*/;
-REG8    reserved_m /* 14*/;
-REG8    reserved_n /* 15*/;
-REG8    reserved_o /* 16*/;
-REG8    reserved_p /* 17*/;
-REG8    reserved_q /* 18*/;
-REG8    reserved_r /* 19*/;
-REG8    reserved_s /* 1a*/;
-REG8    reserved_t /* 1b*/;
-REG8    reserved_u /* 1c*/;
+    REG8    reserved_i /* 0F*/;
+    REG8    reserved_j /* 10*/;
+    REG8    reserved_k /* 11*/;
+    REG8    reserved_l /* 12*/;
+    REG8    reserved_m /* 13*/;
+    REG8    reserved_n /* 14*/;
+    REG8    reserved_o /* 15*/;
+    REG8    reserved_p /* 16*/;
+    REG8    reserved_q /* 17*/;
+    REG8    reserved_r /* 18*/;
+    REG8    reserved_s /* 19*/;
+    REG8    reserved_t /* 1a*/;
+    REG8    reserved_u /* 1b*/;
     REG8    IE;         /** 0x1C*/
     REG8    IFG;        /** 0x1D*/
     REG8    IV;         /** 0x1E*/
@@ -489,7 +491,6 @@ typedef struct {
 #define SFR                     ((msp_sfr_t *)SFR_BASE)
 #define PORT_1                  ((msp_port_t *)PORT_1_BASE)
 #define PORT_2                  ((msp_port_t *)PORT_2_BASE)
-
 #define PORT_3                  ((msp_port_t *)PORT_3_BASE)
 #define PORT_4                  ((msp_port_t *)PORT_4_BASE)
 #define PORT_5                  ((msp_port_t *)PORT_5_BASE)

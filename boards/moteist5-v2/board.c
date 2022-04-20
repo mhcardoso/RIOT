@@ -39,8 +39,9 @@ static void moteist5v2_ports_init(void)
      *  P1.7 receives interrupt INT2 from accelerometer -> input, GPIO, default to GND
      */
     P1SEL = 0x00;    /* Port1 Select: 00000010 = 0x02 */
-    P1OUT = 0x00;    /* Port1 Output: 00100000 = 0x20 */
-    P1DIR = 0x00;    /* Port1 Direction: 00000000 = 0x00 */
+    P1OUT = 0x39/*0x00*/;    /* Port1 Output: 00100000 = 0x20 */
+    P1DIR = 0x39/*0x00*/;    /* Port1 Direction: 00000000 = 0x00 */
+    P1REN = 0xC6;
 
     /* Port 2:
      *  P2.0 is not assigned by default
@@ -102,7 +103,7 @@ static void moteist5v2_ports_init(void)
      *  - Z1 only uses the USCI1 I2C channel
      *  - P5.3 controls the +5V aux. power regulator in Z1 "starter pack"
      */
-    P5SEL = 0x10;    /* Port5 Select: 00000110 = 0x06 */
+    P5SEL = 0x0C/*0x10*/;    /* Port5 Select: 00000110 = 0x06 */
     P5OUT = 0x08;    /* Port5 Output: 11110000 = 0xF0 */
     P5DIR = 0x00;    /* Port5 Direction: 11110101 = 0xF5 */
 
@@ -128,8 +129,8 @@ static void moteist5v2_ports_init(void)
     P9DIR = 0xCC;
 
     P10SEL = 0x0E; /* 00001110*/
-    P10OUT = 0x01; /* 00000001*/
-    P10DIR = 0x0D; /* 00001101*/
+    P10OUT = 0xF1/*0x01*/; /* 00000001*/
+    P10DIR = 0xFB/*0x0D*/; /* 00001101*/
 
     P11SEL = 0x00;
     P11OUT = 0x00;
@@ -144,10 +145,15 @@ void msp430_init_dco(void)
    int multiplier, i;
    
    multiplier = F_CPU/32678U - 1; 
-
+   /*maybe*/__bis_SR_register(SCG0);
    UCSCTL0 = 0x0000;
    UCSCTL1 = DCORSEL_5;
    UCSCTL2 = FLLD_1 + multiplier;
+   /*maybe*/__bic_SR_register(SCG0);
+   
+   
+  /*maybe*/UCSCTL6 &= ~(XT1OFF + XT2OFF);            // Set XT1 & XT2 On
+  /*maybe*/UCSCTL6 |= XCAP_3;                        // Internal load cap
 
    do{
        UCSCTL7 &= ~(XT2OFFG + XT1LFOFFG + XT1HFOFFG + DCOFFG);
@@ -157,9 +163,11 @@ void msp430_init_dco(void)
 	 __nop();
        }
    }while(SFRIFG1 & OFIFG);
-
+   
+   /*maybe*/ UCSCTL6 &= ~XT2DRIVE0;
+   
    UCSCTL3 |= SELREF_0;
-   UCSCTL4 |= SELA_0;
+   UCSCTL4 |= SELA_0 + SELS_4;
 }
 
 

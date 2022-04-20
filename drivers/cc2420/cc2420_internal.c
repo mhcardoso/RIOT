@@ -35,7 +35,7 @@
 uint8_t cc2420_strobe(const cc2420_t *dev, const uint8_t command)
 {
     uint8_t res;
-
+    xtimer_usleep(CC2420_XOSCON_DELAY);
     spi_acquire(SPI_BUS, SPI_CS, SPI_MODE, SPI_CLK);
     res = spi_transfer_byte(SPI_BUS, SPI_CS, false, command);
     spi_release(SPI_BUS);

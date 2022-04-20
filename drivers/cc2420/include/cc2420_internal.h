@@ -37,7 +37,7 @@ extern "C" {
  * @brief   Delays for resetting and turning on the device
  */
 #define CC2420_RESET_DELAY      (500U)
-#define CC2420_XOSCON_DELAY     (10000U)
+#define CC2420_XOSCON_DELAY     (8000U)
 
 uint8_t cc2420_strobe(const cc2420_t *dev, const uint8_t command);
 

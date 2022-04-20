@@ -21,7 +21,7 @@
 #include "net/ipv6/hdr.h"
 #endif
 
-#define ENABLE_DEBUG 0
+#define ENABLE_DEBUG 1
 #include "debug.h"
 
 #include "od.h"
@@ -395,6 +395,7 @@ static int _send(gnrc_netif_t *netif, gnrc_pktsnip_t *pkt)
         res = dev->driver->send(dev, &iolist_header);
     }
 #else
+    printf("aqui!!\n");
     res = dev->driver->send(dev, &iolist_header);
 #endif
 
