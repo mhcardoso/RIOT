@@ -92,7 +92,7 @@ typedef struct {
     REG8    reserved_o; /** 0x14*/
     REG8    reserved_p; /** 0x15*/
     REG8    reserved_q; /** 0x16*/
-    REG8    reserved_r; /** 0x18*/
+    REG8    reserved_r; /** 0x17*/
     REG8    IES; /** 0x18*/
     REG8    reserved_s; /** 0x19*/
     REG8    IE; /** 0x1a*/

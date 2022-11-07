@@ -217,7 +217,7 @@ SECTIONS
     KEEP (*(.init))
     KEEP (*(.fini))
     KEEP (*(.tm_clone_table))
-  } > ROM
+  } > HIROM
 
   .lower.rodata :
   {
