@@ -54,6 +54,7 @@ extern volatile int __irq_is_in;
  */
 static inline void __attribute__((always_inline)) __save_context(void)
 {
+#if !defined(MSP430X) || (!defined(__MSP430_HAS_MSP430X_CPU__) && !defined(__MSP430_HAS_MSP430XV2_CPU__))
     __asm__("push r15");
     __asm__("push r14");
     __asm__("push r13");
@@ -68,6 +69,20 @@ static inline void __attribute__((always_inline)) __save_context(void)
     __asm__("push r4");
 
     __asm__("mov.w r1,%0" : "=r"(thread_get_active()->sp));
+#else /* !MSP430X */
+    __asm__("pushm.a	#1, r15		\n\t"); /* get a scratch register */
+    __asm__("mova	4(r1), r15	\n\t"); /* get the return address */
+    __asm__("mov.w	r2, 4(r1)	\n\t"); /* save the status register */
+    __asm__("dint		        \n\t"); /* disable interrupts */
+    __asm__("nop                \n\t");
+    __asm__("mov.w	r15, 6(r1)	\n\t"); /* save the low 16 bits of the return address */
+    __asm__("rrum.a	#4, r15		\n\t"); /* shift the high 4 bits down to bits 15..12 */
+    __asm__("bic	#0x0FFF, r15    \n\t"); /* mask off the low 12 bits */
+    __asm__("bis	r15, 4(r1)	\n\t"); /* store the high 4 bits of the return address */
+    __asm__("pushm.a #11, r14");
+
+    __asm__("mov.w r1,%0" : "=r"(thread_get_active()->sp));
+#endif /* !MSP430X */
 }
 
 /**
@@ -75,6 +90,7 @@ static inline void __attribute__((always_inline)) __save_context(void)
  */
 static inline void __attribute__((always_inline)) __restore_context(void)
 {
+#if !defined(MSP430X) || (!defined(__MSP430_HAS_MSP430X_CPU__) && !defined(__MSP430_HAS_MSP430XV2_CPU__))
     __asm__("mov.w %0,r1" : : "m"(thread_get_active()->sp));
 
     __asm__("pop r4");
@@ -90,6 +106,12 @@ static inline void __attribute__((always_inline)) __restore_context(void)
     __asm__("pop r14");
     __asm__("pop r15");
     __asm__("reti");
+#else /* !MSP430X */
+    __asm__("mov.w %0,r1" : : "m"(thread_get_active()->sp));
+
+    __asm__("popm.a #12, r15")
+    __asm__("reti");
+#endif /* !MSP430X */
 }
 
 /**

@@ -40,6 +40,7 @@ void thread_yield_higher(void)
         sched_context_switch_request = 1;
     }
     else {
+#if !defined(MSP430X) || (!defined(__MSP430_HAS_MSP430X_CPU__) && !defined(__MSP430_HAS_MSP430XV2_CPU__))
         __asm__ volatile (
             "push r2"   "\n\t"  /* save SR */
             "dint"      "\n\t"  /* reti will restore SR, and thus, IRQ state */
@@ -48,7 +49,7 @@ void thread_yield_higher(void)
             :                   /* no inputs */
             :                   /* no clobbers */
             );
-
+#endif
         __save_context();
 
         /* have thread_get_active() point to the next thread */
@@ -101,6 +102,7 @@ __attribute__((section (".fini9"))) void __main_epilogue(void) { __asm__("ret");
 /* ------------------------------------------------------------------------- */
 char *thread_stack_init(thread_task_func_t task_func, void *arg, void *stack_start, int stack_size)
 {
+#if !defined(MSP430X) || (!defined(__MSP430_HAS_MSP430X_CPU__) && !defined(__MSP430_HAS_MSP430XV2_CPU__))
     unsigned short stk = (unsigned short)((uintptr_t) stack_start + stack_size);
 
     /* ensure correct stack alignment (on 16-bit boundary) */
@@ -133,4 +135,47 @@ char *thread_stack_init(thread_task_func_t task_func, void *arg, void *stack_sta
     stackptr[8] = (intptr_t)arg;
 
     return (char *) stackptr;
+#else 
+    unsigned short stk = (unsigned short)((uintptr_t) stack_start + stack_size);
+
+    /* ensure correct stack alignment (on 16-bit boundary) */
+    stk &= 0xfffe;
+    unsigned short *stackptr = (unsigned short *)(uintptr_t)stk;
+
+    /* now make SP point on the first AVAILABLE slot in stack */
+    --stackptr;
+
+    *stackptr = (unsigned short)(__int20) sched_task_exit;
+    --stackptr;
+    
+    /* addition for -mlarge */    
+    *stackptr = ( 0xF000 & ( unsigned short ) ( ( ( __int20 ) sched_task_exit ) >> 4 ) );
+    --stackptr;
+
+    *stackptr = (unsigned short)(__int20) task_func;
+    --stackptr;
+    
+    /* addition for -mlarge */    
+    *stackptr = ( 0xF000 & ( unsigned short ) ( ( ( __int20 ) task_func ) >> 4 ) );
+    /*--stackptr; */
+
+    /* initial value for SR */
+    *stackptr |= GIE;
+    --stackptr;
+
+    /* Space for registers. */
+    for (unsigned int i = 27/*15*/; i > 4; i--) { //problema aqui? 
+        *stackptr = i;
+        --stackptr;
+    }
+
+    /* set arg to R12
+       this was R15 in mspgcc, see https://www.ti.com/lit/an/slaa664/slaa664.pdf
+       stackptr points to R3, so write arg 9 words after that.
+    */
+    stackptr[16] = (intptr_t)arg;
+    stackptr[17] = (intptr_t)0;
+
+    return (char *) stackptr;
+#endif
 }

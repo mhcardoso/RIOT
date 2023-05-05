@@ -100,6 +100,26 @@ init_ports(void)
     P6OUT = 0;
 #endif
 
+#ifdef P7DIR
+    P7DIR = 0;
+    P7OUT = 0;
+#endif
+
+#ifdef P8DIR
+    P8DIR = 0;
+    P8OUT = 0;
+#endif
+
+#ifdef P9DIR
+    P9DIR = 0;
+    P9OUT = 0;
+#endif
+
+#ifdef P10DIR
+    P10DIR = 0;
+    P10OUT = 0;
+#endif
+
     P1IE = 0;
     P2IE = 0;
 }
