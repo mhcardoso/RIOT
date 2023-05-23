@@ -14,6 +14,10 @@
 #include "sched.h"
 #include "thread.h"
 
+//Take this out
+#include "msp430f5438a.h"
+//
+
 /*
  * This function can both be called from ISR and from thread context.
  *
@@ -135,9 +139,8 @@ char *thread_stack_init(thread_task_func_t task_func, void *arg, void *stack_sta
     stackptr[8] = (intptr_t)arg;
 
     return (char *) stackptr;
-#else 
+#else
     unsigned short stk = (unsigned short)((uintptr_t) stack_start + stack_size);
-
     /* ensure correct stack alignment (on 16-bit boundary) */
     stk &= 0xfffe;
     unsigned short *stackptr = (unsigned short *)(uintptr_t)stk;
@@ -145,18 +148,18 @@ char *thread_stack_init(thread_task_func_t task_func, void *arg, void *stack_sta
     /* now make SP point on the first AVAILABLE slot in stack */
     --stackptr;
 
-    *stackptr = (unsigned short)(__int20) sched_task_exit;
+    *stackptr = (unsigned short)(__int20__) sched_task_exit;
     --stackptr;
     
     /* addition for -mlarge */    
-    *stackptr = ( 0xF000 & ( unsigned short ) ( ( ( __int20 ) sched_task_exit ) >> 4 ) );
+    *stackptr = ( 0xF000 & ( unsigned short ) ( ( (__int20__) sched_task_exit ) >> 4 ) );
     --stackptr;
 
-    *stackptr = (unsigned short)(__int20) task_func;
+    *stackptr = (unsigned short)(__int20__) task_func;
     --stackptr;
     
     /* addition for -mlarge */    
-    *stackptr = ( 0xF000 & ( unsigned short ) ( ( ( __int20 ) task_func ) >> 4 ) );
+    *stackptr = ( 0xF000 & ( unsigned short ) ( ( ( __int20__ ) task_func ) >> 4 ) );
     /*--stackptr; */
 
     /* initial value for SR */

@@ -28,7 +28,7 @@
 #include "cc2420_netdev.h"
 #include "cc2420_registers.h"
 
-#define ENABLE_DEBUG 0
+#define ENABLE_DEBUG 1
 #include "debug.h"
 
 void cc2420_setup(cc2420_t * dev, const cc2420_params_t *params, uint8_t index)
@@ -45,6 +45,16 @@ void cc2420_setup(cc2420_t * dev, const cc2420_params_t *params, uint8_t index)
 
     netdev_register(netdev, NETDEV_CC2420, index);
     netdev_ieee802154_setup(&dev->netdev);
+
+    //
+    uint16_t reg;
+    for(int i = 0x10; i <= 0x30; i++)
+    {
+        reg = cc2420_reg_read(dev, i);
+        printf("At position %x we can see %x\n", i, reg);
+    }
+    //
+
 }
 
 int cc2420_init(cc2420_t *dev)
@@ -85,6 +95,7 @@ int cc2420_init(cc2420_t *dev)
 
     /* go into RX state */
     cc2420_set_state(dev, NETOPT_STATE_IDLE);
+
 
     return 0;
 }
@@ -148,6 +159,8 @@ void cc2420_tx_exec(cc2420_t *dev)
     DEBUG("cc2420: tx_exec: TX_START\n");
     if (dev->options & CC2420_OPT_CSMA) {
         DEBUG("cc2420: tx_exec: triggering TX with CCA\n");
+        cc2420_strobe(dev, CC2420_STROBE_RXON);
+        while (!(cc2420_status(dev) & CC2420_STATUS_RSSI_VALID)) {}
         cc2420_strobe(dev, CC2420_STROBE_TXONCCA);
     }
     else {

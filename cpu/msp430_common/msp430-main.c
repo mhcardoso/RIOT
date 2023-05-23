@@ -120,6 +120,11 @@ init_ports(void)
     P10OUT = 0;
 #endif
 
+#ifdef P11DIR
+    P11DIR = 0;
+    P11OUT = 0;
+#endif
+
     P1IE = 0;
     P2IE = 0;
 }
@@ -127,6 +132,7 @@ init_ports(void)
 void msp430_cpu_init(void)
 {
     irq_disable();
+    WDTCTL     =  WDTPW + WDTHOLD;
     init_ports();
     irq_enable();
 }

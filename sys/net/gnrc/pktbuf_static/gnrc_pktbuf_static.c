@@ -442,7 +442,7 @@ static void *_pktbuf_alloc(size_t size)
     if (CONFIG_GNRC_PKTBUF_CHECK_USE_AFTER_FREE &&
         (mismatch = mem_is_set(ptr + 1, CANARY, size - sizeof(_unused_t)))) {
         printf("[%p] mismatch at offset %"PRIuPTR"/%u (ignoring %u initial bytes that were repurposed)\n",
-               (void *)ptr, (uintptr_t)mismatch - (uintptr_t)ptr, (unsigned)size, (unsigned)sizeof(_unused_t));
+               (void *)ptr, (unsigned)((uintptr_t)mismatch - (uintptr_t)ptr), (unsigned)size, (unsigned)sizeof(_unused_t));
 #ifdef MODULE_OD
         od_hex_dump(ptr, size, 0);
 #endif

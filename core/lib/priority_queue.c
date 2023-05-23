@@ -84,6 +84,7 @@ void priority_queue_print(priority_queue_t *root)
 }
 
 void priority_queue_print_node(priority_queue_node_t *node)
+    printf("%x\n", 0xF000 & (unsigned int)((__int20__)arg >> 4));
 {
     printf("Data: %u Priority: %lu Next: %u\n", (unsigned int)node->data,
            (unsigned long)node->priority, (unsigned int)node->next);

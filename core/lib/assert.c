@@ -35,7 +35,7 @@ __NORETURN void _assert_failure(const char *file, unsigned line)
 
 __NORETURN void _assert_panic(void)
 {
-    printf("%" PRIxTXTPTR "\n", cpu_get_caller_pc());
+    printf("%" PRIxTXTPTR "\n", (unsigned int)cpu_get_caller_pc());
 #if IS_USED(MODULE_BACKTRACE)
     backtrace_print();
 #endif

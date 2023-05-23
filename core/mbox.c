@@ -65,7 +65,7 @@ int _mbox_put(mbox_t *mbox, msg_t *msg, int blocking)
 
     if (next) {
         DEBUG("mbox: Thread %" PRIkernel_pid " mbox 0x%08x: _tryput(): "
-              "there's a waiter.\n", thread_getpid(), (unsigned)mbox);
+              "there's a waiter.\n", thread_getpid(), (unsigned)(uintptr_t)mbox);
         thread_t *thread =
             container_of((clist_node_t *)next, thread_t, rq_entry);
         *(msg_t *)thread->wait_data = *msg;
@@ -85,7 +85,7 @@ int _mbox_put(mbox_t *mbox, msg_t *msg, int blocking)
         }
 
         DEBUG("mbox: Thread %" PRIkernel_pid " mbox 0x%08x: _tryput(): "
-              "queued message.\n", thread_getpid(), (unsigned)mbox);
+              "queued message.\n", thread_getpid(), (unsigned)(uintptr_t)mbox);
         msg->sender_pid = thread_getpid();
         /* copy msg into queue */
         mbox->msg_array[cib_put_unsafe(&mbox->cib)] = *msg;
@@ -100,7 +100,7 @@ int _mbox_get(mbox_t *mbox, msg_t *msg, int blocking)
 
     if (cib_avail(&mbox->cib)) {
         DEBUG("mbox: Thread %" PRIkernel_pid " mbox 0x%08x: _tryget(): "
-              "got queued message.\n", thread_getpid(), (unsigned)mbox);
+              "got queued message.\n", thread_getpid(), (unsigned)(uintptr_t)mbox);
         /* copy msg from queue */
         *msg = mbox->msg_array[cib_get_unsafe(&mbox->cib)];
         list_node_t *next = list_remove_head(&mbox->writers);

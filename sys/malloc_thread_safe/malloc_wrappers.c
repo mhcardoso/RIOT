@@ -44,7 +44,7 @@ void __attribute__((used)) *__wrap_malloc(size_t size)
     mutex_unlock(&_lock);
     if (IS_USED(MODULE_MALLOC_TRACING)) {
         printf("malloc(%u) @ 0x%" PRIxTXTPTR " returned %p\n",
-               (unsigned)size, pc, ptr);
+               (unsigned)size, (unsigned int)pc, ptr);
     }
     return ptr;
 }
@@ -53,7 +53,7 @@ void __attribute__((used)) __wrap_free(void *ptr)
 {
     if (IS_USED(MODULE_MALLOC_TRACING)) {
         uinttxtptr_t pc = cpu_get_caller_pc();
-        printf("free(%p) @0x%" PRIxTXTPTR ")\n", ptr, pc);
+        printf("free(%p) @0x%" PRIxTXTPTR ")\n", ptr, (unsigned int)pc);
     }
     assert(!irq_is_in());
     mutex_lock(&_lock);
@@ -74,7 +74,7 @@ void * __attribute__((used)) __wrap_calloc(size_t nmemb, size_t size)
     if (__builtin_mul_overflow(nmemb, size, &total_size)) {
         if (IS_USED(MODULE_MALLOC_TRACING)) {
             printf("calloc(%u, %u) @0x%" PRIxTXTPTR " overflowed\n",
-                   (unsigned)nmemb, (unsigned)size, pc);
+                   (unsigned)nmemb, (unsigned)size, (unsigned int)pc);
         }
         return NULL;
     }
@@ -88,7 +88,7 @@ void * __attribute__((used)) __wrap_calloc(size_t nmemb, size_t size)
 
     if (IS_USED(MODULE_MALLOC_TRACING)) {
         printf("calloc(%u, %u) @0x%" PRIxTXTPTR " returned %p\n",
-               (unsigned)nmemb, (unsigned)size, pc, res);
+               (unsigned)nmemb, (unsigned)size, (unsigned int)pc, res);
     }
 
     return res;
@@ -108,7 +108,7 @@ void * __attribute__((used))__wrap_realloc(void *ptr, size_t size)
 
     if (IS_USED(MODULE_MALLOC_TRACING)) {
         printf("realloc(%p, %u) @0x%" PRIxTXTPTR " returned %p\n",
-               ptr, (unsigned)size, pc, new);
+               ptr, (unsigned)size, (unsigned int)pc, new);
     }
     return new;
 }

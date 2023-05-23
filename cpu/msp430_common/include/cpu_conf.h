@@ -45,6 +45,9 @@ extern "C" {
 #elif defined (CPU_MODEL_CC430F6137)
 #define CPU_FLASH_BASE      (0x8000)
 #define FLASHPAGE_NUMOF     (64U)        /* 32K */
+#elif defined (CPU_MODEL_MSP430F5438A)
+#define CPU_FLASH_BASE      (0xFFFF)
+#define FLASHPAGE_NUMOF     (430U)
 #endif
 
 /* The minimum block size which can be written is 1B. However, the erase
@@ -68,15 +71,15 @@ extern "C" {
 #endif
 
 #ifndef THREAD_STACKSIZE_DEFAULT
-#   define THREAD_STACKSIZE_DEFAULT         (384)
+#   define THREAD_STACKSIZE_DEFAULT         (750)
 #endif
 
 #ifndef THREAD_STACKSIZE_IDLE
-#   define THREAD_STACKSIZE_IDLE            (96)
+#   define THREAD_STACKSIZE_IDLE            (200)
 #endif
 
 #ifndef ISR_STACKSIZE
-#   define ISR_STACKSIZE                    (256)
+#   define ISR_STACKSIZE                    (300)
 #endif
 
 #ifndef CONFIG_GNRC_PKTBUF_SIZE
@@ -85,7 +88,7 @@ extern "C" {
 #endif
 
 #ifndef GNRC_IPV6_STACK_SIZE
-#   define GNRC_IPV6_STACK_SIZE             (512)
+#   define GNRC_IPV6_STACK_SIZE             (700)
 #endif
 /** @} */
 

@@ -95,4 +95,10 @@ ifndef CONFIG_KCONFIG_MODULE_GCOAP
 # Increase from default for confirmable block2 follow-on requests
 GCOAP_RESEND_BUFS_MAX ?= 2
 CFLAGS += -DCONFIG_GCOAP_RESEND_BUFS_MAX=$(GCOAP_RESEND_BUFS_MAX)
+
+CFLAGS += -DMSP430X
+CFLAGS += -mlarge -mdata-region=lower -mcode-region=upper
+ASFLAGS += -mlarge -mdata-region=lower -mcode-region=upper
+LINKFLAGS += -mlarge -mdata-region=lower -mcode-region=upper
+
 endif

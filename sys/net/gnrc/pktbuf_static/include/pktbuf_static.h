@@ -37,7 +37,8 @@ extern "C" {
  */
 typedef struct _unused {
     struct _unused *next;   /**< the next unused section */
-    unsigned int size;      /**< the size of the unused section */
+    unsigned int size; /**< the size of the unused section */
+    unsigned int padding; //unused in actual RIOT, hacking the hackathon
 } _unused_t;
 
 /**

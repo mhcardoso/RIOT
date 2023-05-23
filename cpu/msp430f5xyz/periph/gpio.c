@@ -23,6 +23,8 @@
 #include "bitarithm.h"
 #include "periph/gpio.h"
 
+#include "msp430f5438a.h"
+
 /**
  * @brief   Number of possible interrupt lines: 2 ports * 8 pins
  */
@@ -56,7 +58,7 @@ static msp_port_t *_port(gpio_t pin)
             return PORT_9;
        case 10:
             return PORT_10;
-        default:
+       default:
             return NULL;
     }
 }
@@ -70,7 +72,7 @@ static inline msp_port_isr_t *_isr_port(gpio_t pin)
 {
     msp_port_t *p = _port(pin);
     if ((p == PORT_1) || (p == PORT_2)) {
-        return (msp_port_isr_t *)p;
+        return (p == PORT_1) ? PORT_1_ISR : PORT_2_ISR;
     }
     return NULL;
 }
@@ -197,6 +199,7 @@ int gpio_init_int(gpio_t pin, gpio_mode_t mode, gpio_flank_t flank,
 
 void gpio_irq_enable(gpio_t pin)
 {
+    P4OUT ^= 0xe0;
     msp_port_isr_t *port = _isr_port(pin);
     if (port) {
         port->IE |= _pin(pin);
@@ -224,14 +227,14 @@ static inline void isr_handler(msp_port_isr_t *port, int ctx)
 ISR(PORT1_VECTOR, isr_port1)
 {
     __enter_isr();
-    isr_handler((msp_port_isr_t *)PORT_1, 0);
+    isr_handler((msp_port_isr_t *)PORT_1_ISR, 0);
     __exit_isr();
 }
 
 ISR(PORT2_VECTOR, isr_port2)
 {
     __enter_isr();
-    isr_handler((msp_port_isr_t *)PORT_2, 8);
+    isr_handler((msp_port_isr_t *)PORT_2_ISR, 8);
     __exit_isr();
 }
 #endif /* MODULE_PERIPH_GPIO_IRQ */

@@ -30,6 +30,8 @@
 #include "thread.h"
 #include "cpu_conf.h"
 
+#include "msp430f5438a.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -85,6 +87,12 @@ static inline void __attribute__((always_inline)) __save_context(void)
 #endif /* !MSP430X */
 }
 
+static inline void __attribute__((always_inline)) __save_context_isr(void)
+{
+    __asm__("pushm.a #12, r15");
+    __asm__("mov.w r1,%0" : "=r"(thread_get_active()->sp));
+}
+
 /**
  * @brief   Restore the thread context from inside an ISR
  */
@@ -109,7 +117,7 @@ static inline void __attribute__((always_inline)) __restore_context(void)
 #else /* !MSP430X */
     __asm__("mov.w %0,r1" : : "m"(thread_get_active()->sp));
 
-    __asm__("popm.a #12, r15")
+    __asm__("popm.a #12, r15");
     __asm__("reti");
 #endif /* !MSP430X */
 }
@@ -120,7 +128,7 @@ static inline void __attribute__((always_inline)) __restore_context(void)
 static inline void __attribute__((always_inline)) __enter_isr(void)
 {
     extern char __stack;    /* defined by linker script to end of RAM */
-    __save_context();
+    __save_context_isr();
     __asm__("mov.w %0,r1" : : "i"(&__stack));
     __irq_is_in = 1;
 }

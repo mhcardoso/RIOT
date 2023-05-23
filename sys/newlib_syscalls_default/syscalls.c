@@ -225,7 +225,7 @@ __attribute__((weak)) void heap_stats(void)
     }
 
     printf("heap: %ld (used %d, free %ld) [bytes]\n",
-           heap_size, minfo.uordblks, heap_size - minfo.uordblks);
+           heap_size, (int)minfo.uordblks, heap_size - minfo.uordblks);
 }
 #endif /* HAVE_HEAP_STATS */
 

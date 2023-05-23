@@ -5,7 +5,7 @@ CFLAGS += -DCPU_MODEL_$(call uppercase_and_underscore,$(CPU_MODEL))
 MSP430X_20BIT ?= 0
 ifeq ($(MSP430X_20BIT),1)
   CFLAGS += -DMSP430X
-  CFLAGS += -mlarge -mdata-region=lower -mcode-region=upper
+#  CFLAGS += -mlarge -mdata-region=lower -mcode-region=upper
 endif
 
 # include the msp430 common Makefile

@@ -147,7 +147,7 @@ typedef struct {
     REG8    reserved_q;
     REG8    AIE;        /** 0x1C*/
     REG8    AIFG;       /** 0x1D*/
-    REG8    AIV;        /** 0x1E*/
+    REG16   AIV;        /** 0x1E*/
 } msp_usci_t;
 
 
@@ -490,7 +490,9 @@ typedef struct {
  */
 #define SFR                     ((msp_sfr_t *)SFR_BASE)
 #define PORT_1                  ((msp_port_t *)PORT_1_BASE)
+#define PORT_1_ISR              ((msp_port_isr_t *)PORT_1_BASE)
 #define PORT_2                  ((msp_port_t *)PORT_2_BASE)
+#define PORT_2_ISR              ((msp_port_isr_t *)PORT_2_BASE)
 #define PORT_3                  ((msp_port_t *)PORT_3_BASE)
 #define PORT_4                  ((msp_port_t *)PORT_4_BASE)
 #define PORT_5                  ((msp_port_t *)PORT_5_BASE)

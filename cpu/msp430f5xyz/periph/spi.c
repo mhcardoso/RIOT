@@ -82,10 +82,10 @@ void spi_acquire(spi_t bus, spi_cs_t cs, spi_mode_t mode, spi_clk_t clk)
     if (br < 2) {
         br = 2;
     }
-    SPI_BASE->BR0 = (uint8_t)br;
-    SPI_BASE->BR1 = (uint8_t)(br >> 8);
-    /*SPI_BASE->BR0 = 0x02;
-    SPI_BASE->BR1 = 0x00 */
+    //SPI_BASE->BR0 = (uint8_t)br;
+    //SPI_BASE->BR1 = (uint8_t)(br >> 8);
+    SPI_BASE->BR0 = 0x02;
+    SPI_BASE->BR1 = 0x00;
 
     /* configure bus mode */
 #ifndef SPI_USE_USCI
