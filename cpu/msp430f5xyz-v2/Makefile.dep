@@ -1,2 +1,0 @@
-USEMODULE += periph
-include $(RIOTCPU)/msp430_common-v2/Makefile.dep
