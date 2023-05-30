@@ -6,6 +6,12 @@ MSP430_SUPPORT_FILES ?= $(RIOTCPU)/msp430_common/vendor/msp430-gcc-support-files
 
 # define build specific options
 CFLAGS_CPU   = -mmcu=$(CPU_MODEL) -isystem $(MSP430_SUPPORT_FILES)/include
+
+ifeq ($(MSP430X_20BIT),1)
+	CFLAGS_CPU += -DMSP430X
+	CFLAGS_CPU += -mlarge -mdata-region=lower -mcode-region=upper
+endif
+
 CFLAGS_LINK  = -ffunction-sections -fdata-sections
 CFLAGS_DBG  ?= -g -gdwarf-2
 CFLAGS_OPT  ?= -Os
