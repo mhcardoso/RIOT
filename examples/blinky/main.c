@@ -49,6 +49,7 @@ static void delay(void)
 
 int main(void)
 {
+    puts("Blink! (No LED present or configured...)");
     while (1) {
         delay();
 #ifdef LED0_TOGGLE

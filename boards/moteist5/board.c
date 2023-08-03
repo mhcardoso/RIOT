@@ -103,7 +103,7 @@ static void moteist5_ports_init(void)
      *  - Z1 only uses the USCI1 I2C channel
      *  - P5.3 controls the +5V aux. power regulator in Z1 "starter pack"
      */
-    P5SEL = 0x0C/*0x10*/;    /* Port5 Select: 00000110 = 0x06 */
+    P5SEL = 0x1C/*0x10*/;    /* Port5 Select: 00000110 = 0x06 */
     P5OUT = 0x08;    /* Port5 Output: 11110000 = 0xF0 */
     P5DIR = 0x00;    /* Port5 Direction: 11110101 = 0xF5 */
 
@@ -164,12 +164,32 @@ void msp430_init_dco(void)
        }
    }while(SFRIFG1 & OFIFG);
    
-   /*maybe*/ UCSCTL6 &= ~XT2DRIVE0;
+   UCSCTL6 &= ~XT2DRIVE0;
    
    UCSCTL3 |= SELREF_0;
    UCSCTL4 |= SELA_0 + SELS_4;
 }
 
+void activate_switches(void){
+	P3SEL |= 0x80;                            // P3.7 - SDA - Assign I2C pins
+	P5SEL |= 0x10;							  // P5.4 - SCL
+                             
+	UCB1CTL1 |= UCSWRST;                      // Enable SW reset
+  
+	UCB1CTL0 = UCMST + UCMODE_3 + UCSYNC;     // I2C Master, synchronous mode
+	UCB1CTL1 = UCSSEL_2 + UCSWRST;            // Use SMCLK
+	UCB1BR0 = 12;                             // fSCL = SMCLK/12 = ~100kHz
+  	UCB1BR1 = 0;
+  	UCB1I2CSA = 0x48;                         // Slave Address is 090h 1001 0000 -> address (7bit, A0=A1=0) + R/!W
+  
+  	UCB1CTL1 &= ~UCSWRST;                     // Clear SW reset*/
+
+	while (UCB1CTL1 & UCTXSTP);               // Ensure stop condition got sent
+    UCB1CTL1 |= UCTR + UCTXSTT;               // I2C start condition
+  	UCB1TXBUF = 0xFF;  	                      // Send init data
+  	while(UCB1CTL1 & UCTXSTT);                // Start condition sent?
+  	UCB1CTL1 |= UCTXSTP;				      // I2C1 Stop Condition
+}
 
 /* "public" specific initialization function for the Zolertia Z1 hardware */
 
@@ -186,6 +206,9 @@ void board_init(void)
 
     /* initializes DCO */
     msp430_init_dco();
+
+    /* moteist5 specific code, activates the connectors */
+    activate_switches();
 
     /* enable interrupts */
     __bis_SR_register(GIE);

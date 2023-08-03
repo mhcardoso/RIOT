@@ -142,10 +142,10 @@ int uart_init(uart_t uart, uint32_t baudrate, uart_rx_cb_t rx_cb, void *arg)
     ctx_rx_cb = rx_cb;
     ctx_isr_arg = arg;
     /* reset interrupt flags and enable RX interrupt */
-    /* UART_IF &= ~(UART_IE_RX_BIT);
+    UART_IF &= ~(UART_IE_RX_BIT);
     UART_IF |=  (UART_IE_TX_BIT);
     UART_IE |=  (UART_IE_RX_BIT);
-    UART_IE &= ~(UART_IE_TX_BIT); */
+    UART_IE &= ~(UART_IE_TX_BIT);
     return 0;
 }
 
@@ -165,22 +165,19 @@ static int init_base(uart_t uart, uint32_t baudrate)
     dev->ACTL0 = 0;
     dev->ASTAT = 0;
     /* configure baudrate */
-    /*uint32_t base = ((CLOCK_CMCLK << 7)  / baudrate);
+    uint32_t base = ((CLOCK_CMCLK << 7)  / baudrate);
     uint16_t br = (uint16_t)(base >> 7);
-    uint8_t brs = (((base & 0x3f) * 8) >> 7); */
-    baudrate = ((CLOCK_CMCLK)/(baudrate));
-    dev->ABR0 = baudrate & 0xff; //ubr & 0xff; likewise over here
-    dev->ABR1 = (baudrate >> 8) & 0xff;//(ubr >> 8) & 0xff;
-    dev->AMCTL = 0x06; /* replace with the proper variable on the msp430_regs.h file */    /* pin configuration -> TODO: move to GPIO driver once implemented */
+    uint8_t brs = (((base & 0x3f) * 8) >> 7);
+    dev->ABR0 = (uint8_t)br;
+    dev->ABR1 = (uint8_t)(br >> 8);
+    dev->AMCTL = (brs << USCI_AMCTL_BRS_SHIFT);
+    /* pin configuration -> TODO: move to GPIO driver once implemented */
     UART_RX_PORT->SEL |= UART_RX_PIN;
     UART_TX_PORT->SEL |= UART_TX_PIN;
     UART_RX_PORT->DIR &= ~(UART_RX_PIN);
     UART_TX_PORT->DIR |= UART_TX_PIN;
     /* releasing the software reset bit starts the UART */
-    dev->AIE &= ~0x0001;
-    dev->AIE &= ~0x0002;
     dev->ACTL1 &= ~(USCI_ACTL1_SWRST);
-    dev->AIE |= 0x0001; 
     return 0;
 }
 

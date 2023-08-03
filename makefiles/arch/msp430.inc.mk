@@ -9,11 +9,12 @@ CFLAGS_CPU   = -mmcu=$(CPU_MODEL) -isystem $(MSP430_SUPPORT_FILES)/include
 
 ifeq ($(MSP430X_20BIT),1)
 	CFLAGS_CPU += -DMSP430X
-	CFLAGS_CPU += -mlarge -mdata-region=lower -mcode-region=upper
+	CFLAGS_CPU += -mlarge -mdata-region=lower -mcode-region=either
 endif
 
 CFLAGS_LINK  = -ffunction-sections -fdata-sections
-CFLAGS_DBG  ?= -g -gdwarf-2
+#CFLAGS_DBG  ?= -g -gdwarf-3 -gstrict-dwarf 
+CFLAGS_DBG ?= -gstabs+
 CFLAGS_OPT  ?= -Os
 
 CFLAGS += $(CFLAGS_CPU) $(CFLAGS_LINK) $(CFLAGS_DBG) $(CFLAGS_OPT)
